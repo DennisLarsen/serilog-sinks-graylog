@@ -12,6 +12,7 @@ using Serilog.Sinks.Graylog.MessageBuilders;
 using Serilog.Sinks.Graylog.Transport;
 using Serilog.Sinks.Graylog.Transport.Http;
 using Serilog.Sinks.Graylog.Transport.Udp;
+using Serilog.Sinks.Graylog.Transport.Tcp;
 using SerilogTransportType = Serilog.Sinks.Graylog.Transport.TransportType;
 
 
@@ -48,7 +49,7 @@ namespace Serilog.Sinks.Graylog
                     IPAddress ipAdress = ipAddreses.FirstOrDefault(c => c.AddressFamily == AddressFamily.InterNetwork);
                     var ipEndpoint = new IPEndPoint(ipAdress, options.Port);
 
-                    IDataToChunkConverter chunkConverter = new DataToChunkConverter(new ChunkSettings
+                    Transport.Udp.IDataToChunkConverter chunkConverter = new Transport.Udp.DataToChunkConverter(new Transport.Udp.ChunkSettings
                     {
                         MessageIdGeneratorType = options.MessageGeneratorType
                     }, new MessageIdGeneratorResolver());
@@ -56,6 +57,21 @@ namespace Serilog.Sinks.Graylog
                     var udpClient = new UdpTransportClient(ipEndpoint);
                     var udpTransport = new UdpTransport(udpClient, chunkConverter);
                     return udpTransport;
+                case SerilogTransportType.Tcp:
+
+                    IDnsInfoProvider tcp_dns = new DnsWrapper();
+                    IPAddress[] tcp_ipAddreses = Task.Run(() => tcp_dns.GetHostAddresses(options.HostnameOrAdress)).Result;
+                    IPAddress tcp_ipAdress = tcp_ipAddreses.FirstOrDefault(c => c.AddressFamily == AddressFamily.InterNetwork);
+                    var tcp_ipEndpoint = new IPEndPoint(tcp_ipAdress, options.Port);
+
+                    Transport.Tcp.IDataToChunkConverter tcp_chunkConverter = new Transport.Tcp.DataToChunkConverter(new Transport.Tcp.ChunkSettings
+                    {
+                        MessageIdGeneratorType = options.MessageGeneratorType
+                    }, new MessageIdGeneratorResolver());
+
+                    var tcpClient = new TcpTransportClient(tcp_ipEndpoint);
+                    var tcpTransport = new TcpTransport(tcpClient, tcp_chunkConverter);
+                    return tcpTransport;
                 case SerilogTransportType.Http:
                     var httpClient = new HttpTransportClient($"{options.HostnameOrAdress}:{options.Port}/gelf");
                     var httpTransport = new HttpTransport(httpClient);
