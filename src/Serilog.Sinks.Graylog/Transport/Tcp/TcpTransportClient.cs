@@ -35,7 +35,7 @@ namespace Serilog.Sinks.Graylog.Transport.Tcp
                         .ContinueWith(ct =>
                         {
                             tcpClient.Client.Send(payload);
-                            if (!ct.IsCompleted)
+                            if (ct.IsFaulted)
                                 throw new LoggingFailedException("Unable send log message to graylog via Tcp transport");
                         });
             }
