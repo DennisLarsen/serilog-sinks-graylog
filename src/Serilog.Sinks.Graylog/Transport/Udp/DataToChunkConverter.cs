@@ -58,7 +58,7 @@ namespace Serilog.Sinks.Graylog.Transport.Udp
                 throw new ArgumentException("message was too long", nameof(message));
             }
 
-            //TOD: FixMe
+            //TODO: FixMe
             IMessageIdGenerator messageIdGenerator = _generatorResolver.Resolve(_settings.MessageIdGeneratorType, message);
             byte[] messageId = messageIdGenerator.GenerateMessageId();
 
