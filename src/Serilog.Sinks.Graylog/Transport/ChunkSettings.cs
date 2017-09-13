@@ -1,6 +1,6 @@
 ﻿using Serilog.Sinks.Graylog.Helpers;
 
-namespace Serilog.Sinks.Graylog.Transport.Tcp
+namespace Serilog.Sinks.Graylog.Transport
 {
     public sealed class ChunkSettings
     {
@@ -25,7 +25,7 @@ namespace Serilog.Sinks.Graylog.Transport.Tcp
         public const byte MaxNumberOfChunksAllowed = 128;
 
         /// <summary>
-        /// The maximum message size in Tcp
+        /// The maximum message size in TCP and UDP
         /// <remarks>
         /// UDP chunks are usually limited to a size of 8192 bytes
         /// </remarks>

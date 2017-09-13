@@ -5,10 +5,10 @@ using FluentAssertions;
 using Moq;
 using Ploeh.AutoFixture;
 using Serilog.Sinks.Graylog.Helpers;
-using Serilog.Sinks.Graylog.Transport.Udp;
+using Serilog.Sinks.Graylog.Transport;
 using Xunit;
 
-namespace Serilog.Sinks.Graylog.Tests.Transport.Udp
+namespace Serilog.Sinks.Graylog.Tests.Transport
 {
     public class DataToChunkConverterFixture
     {

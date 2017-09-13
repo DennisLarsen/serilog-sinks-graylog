@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Serilog.Sinks.Graylog.Helpers;
 
-namespace Serilog.Sinks.Graylog.Transport.Udp
+namespace Serilog.Sinks.Graylog.Transport
 {
     /// <summary>
-    /// Converts Data to udp chunks
+    /// Converts Data to TCP and UDP chunks
     /// </summary>
     public interface IDataToChunkConverter
     {

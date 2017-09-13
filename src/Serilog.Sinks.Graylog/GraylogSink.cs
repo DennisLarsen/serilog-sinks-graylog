@@ -49,7 +49,7 @@ namespace Serilog.Sinks.Graylog
                     IPAddress ipAdress = ipAddreses.FirstOrDefault(c => c.AddressFamily == AddressFamily.InterNetwork);
                     var ipEndpoint = new IPEndPoint(ipAdress, options.Port);
 
-                    Transport.Udp.IDataToChunkConverter chunkConverter = new Transport.Udp.DataToChunkConverter(new Transport.Udp.ChunkSettings
+                    IDataToChunkConverter chunkConverter = new DataToChunkConverter(new ChunkSettings
                     {
                         MessageIdGeneratorType = options.MessageGeneratorType
                     }, new MessageIdGeneratorResolver());
@@ -64,7 +64,7 @@ namespace Serilog.Sinks.Graylog
                     IPAddress tcp_ipAdress = tcp_ipAddreses.FirstOrDefault(c => c.AddressFamily == AddressFamily.InterNetwork);
                     var tcp_ipEndpoint = new IPEndPoint(tcp_ipAdress, options.Port);
 
-                    Transport.Tcp.IDataToChunkConverter tcp_chunkConverter = new Transport.Tcp.DataToChunkConverter(new Transport.Tcp.ChunkSettings
+                    IDataToChunkConverter tcp_chunkConverter = new DataToChunkConverter(new ChunkSettings
                     {
                         MessageIdGeneratorType = options.MessageGeneratorType
                     }, new MessageIdGeneratorResolver());
