@@ -36,13 +36,14 @@
     categories:
       except:
         - Integration
-
+#  OpenCover not working correct with .NetCore projects (can't find pdb object)
   after_test:
     - cmd: "dir C:\\projects\\serilog-sinks-graylog\\src\\Serilog.Sinks.Graylog.Tests\\bin\\Debug\\net46"
-    - .\packages\OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -searchdirs:"C:\projects\serilog-sinks-graylog\src\Serilog.Sinks.Graylog.Tests\bin\Debug\net46" -targetdir:"C:\projects\serilog-sinks-graylog\src\Serilog.Sinks.Graylog.Tests\bin\Debug\net46" -targetargs:"Serilog.Sinks.Graylog.Tests.dll -notrait \"category=Integration\" " -filter:"+[Serilog.Sinks.Graylog*]* -[*]*Test*" -output:.\coverage.xml
+    - .\packages\OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"C:\projects\serilog-sinks-graylog\src\Serilog.Sinks.Graylog.Tests\bin\Debug\net46\Serilog.Sinks.Graylog.Tests.dll -notrait \"category=Integration\" " -filter:"+[Serilog.Sinks.Graylog*]* -[*]*Test*" -output:.\coverage.xml -OldStyle
     - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
     - pip install codecov
-    - codecov -f "coverage.xml" -X gcov
+    - ps: Get-Content coverage.xml | foreach {Write-Output $_}
+    - codecov -f "coverage.xml" -t cd3f1ab1-60c6-4848-824b-466b93321d96
   
   artifacts:
     - path: "./artifacts/*.*"
@@ -62,13 +63,10 @@
 
   image: Visual Studio 2017
 
-  before_build:
-    - appveyor-retry dotnet restore -v Minimal
-
   build_script:
-    - cmd: msbuild /t:restore /v:Minimal ./src/serilog-sinks-graylogvs2017.sln
-    - cmd: msbuild /t:build /p:Configuration=Debug /v:Minimal ./src/serilog-sinks-graylogvs2017.sln
-    - cmd: msbuild /t:pack /v:minimal /p:IncludeSymbols=true /p:PackageOutputPath=../../artifacts ./src/Serilog.Sinks.Graylog/Serilog.Sinks.Graylog.csproj
+    - cmd: msbuild /t:restore ./src/serilog-sinks-graylogvs2017.sln
+    - cmd: msbuild /t:build /p:Configuration=Release /v:Minimal ./src/serilog-sinks-graylogvs2017.sln
+    - cmd: msbuild /t:pack /p:IncludeSymbols=true /p:Configuration=Release /p:PackageOutputPath=../../artifacts ./src/Serilog.Sinks.Graylog/Serilog.Sinks.Graylog.csproj
   
   test:
     categories:
