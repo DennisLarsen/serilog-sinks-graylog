@@ -35,5 +35,17 @@ namespace Serilog.Sinks.Graylog.Tests
             var logger = loggerConfig.CreateLogger();
             logger.Should().NotBeNull();
         }
+
+        [Fact]
+        public void CanApplyExtensionWithIntegralParameterTypes_tcp()
+        {
+            var loggerConfig = new LoggerConfiguration();
+
+            loggerConfig.WriteTo.Graylog("localhost", 12201, TransportType.Tcp,
+                LogEventLevel.Information);
+
+            var logger = loggerConfig.CreateLogger();
+            logger.Should().NotBeNull();
+        }
     }
 }
